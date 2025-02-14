@@ -317,7 +317,7 @@ Camera:
   far clip plane: 2
   field of view: 60
   orthographic: 1
-  orthographic size: 0.5
+  orthographic size: 0.55
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -670,9 +670,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4720292737561293582, guid: 156ec23c139b2bd4ca992bdd79e8c2ce, type: 3}
+      propertyPath: rpm
+      value: 4000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4720292737561293582, guid: 156ec23c139b2bd4ca992bdd79e8c2ce, type: 3}
+      propertyPath: speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5350049748589253036, guid: 156ec23c139b2bd4ca992bdd79e8c2ce, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.1
+      objectReference: {fileID: 0}
     - target: {fileID: 8196284125786669568, guid: 156ec23c139b2bd4ca992bdd79e8c2ce, type: 3}
       propertyPath: m_Name
       value: rotate_point_camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 8271047066599681281, guid: 156ec23c139b2bd4ca992bdd79e8c2ce, type: 3}
+      propertyPath: far clip plane
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8271047066599681281, guid: 156ec23c139b2bd4ca992bdd79e8c2ce, type: 3}
+      propertyPath: orthographic size
+      value: 0.85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
