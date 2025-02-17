@@ -42,7 +42,11 @@ public class ImgSlicer : MonoBehaviour
 
         slicer.transform.position = new Vector3(tarCent.x, tarCent.y, camZ);
 
-        slicer.orthographicSize = camTHICC;
+        maxSize = Mathf.Max(tarSize.x / 2.0f, tarSize.y / 2.0f);
+
+        slicer.orthographicSize = maxSize + tarSize.z / 15.0f;
+
+
 
 
 

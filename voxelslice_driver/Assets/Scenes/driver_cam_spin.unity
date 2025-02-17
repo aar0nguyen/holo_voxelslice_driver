@@ -592,7 +592,7 @@ MonoBehaviour:
   TargetMesh: {fileID: 536093134}
   rpm: 9000
   NumberOfSlices: 100
-  camTHICC: 0.9
+  camTHICC: 0.09
   THICC: 0.08
   camZ: -0.155
 --- !u!4 &1018386195
