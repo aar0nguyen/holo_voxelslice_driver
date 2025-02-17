@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,12 +9,14 @@ public class ImgSlicer : MonoBehaviour
     public Camera slicer;
     public GameObject Target;
     public GameObject TargetMesh;
+    public RenderTexture rt;
 
-    public float rpm;
-    public int NumberOfSlices;
-    public float camTHICC;
+    public bool Turn;
+    public float NumberOfSlices;
     public float THICC;
     public float camZ;
+
+    float sliceCount;
 
 
     Renderer rend;
@@ -20,8 +24,6 @@ public class ImgSlicer : MonoBehaviour
     Vector3 tarSize;
     Vector3 tarCent;
     float maxSize;
-
-
 
 
     private void Start()
@@ -44,9 +46,11 @@ public class ImgSlicer : MonoBehaviour
 
         maxSize = Mathf.Max(tarSize.x / 2.0f, tarSize.y / 2.0f);
 
+        // For 16x16
+        //slicer.orthographicSize = 0.7f;
         slicer.orthographicSize = maxSize + tarSize.z / 15.0f;
 
-
+        sliceCount = 0;
 
 
 
@@ -54,7 +58,36 @@ public class ImgSlicer : MonoBehaviour
 
     private void Update()
     {
-        transform.Rotate(0, rpm * 6f * Time.deltaTime, 0);
+
+        if (Turn)
+        {
+            transform.Rotate(0, 360.0f / NumberOfSlices % 360.0f, 0);
+        }
+        savePNG();
+        Debug.Log(sliceCount);
+        sliceCount = (sliceCount + 1) % NumberOfSlices;
+    }
+
+
+    private void savePNG()
+    {
+        string filename = "slice" + sliceCount.ToString();
+
+        var tex = new Texture2D(rt.width, rt.height, TextureFormat.ARGB32, false);
+
+        slicer.targetTexture = rt;
+        slicer.Render();
+        RenderTexture.active = rt;
+
+        tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        tex.Apply();
+
+        byte[] byteArray = tex.EncodeToPNG();
+
+        var path = "Assets/Textures/Rendered Textures/" + filename + ".png";
+        File.WriteAllBytes(path, byteArray);
+
+        DestroyImmediate(tex);
     }
 
 }
