@@ -472,7 +472,7 @@ MonoBehaviour:
   rt: {fileID: 8400000, guid: 5686885d7b5c1ed458429355c72d7aaa, type: 2}
   Turn: 1
   NumberOfSlices: 100
-  THICC: 0.08
+  CamFar: 0.08
   camZ: -0.155
 --- !u!4 &1018386195
 Transform:

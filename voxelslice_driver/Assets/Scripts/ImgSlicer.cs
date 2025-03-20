@@ -13,7 +13,7 @@ public class ImgSlicer : MonoBehaviour
 
     public bool Turn;
     public float NumberOfSlices;
-    public float THICC;
+    public float CamFar;
     public float camZ;
 
     float sliceCount;
@@ -40,7 +40,7 @@ public class ImgSlicer : MonoBehaviour
         slicer.orthographic = true;
 
         slicer.nearClipPlane = 0;
-        slicer.farClipPlane = THICC;
+        slicer.farClipPlane = CamFar;
 
         slicer.transform.position = new Vector3(tarCent.x, tarCent.y, camZ);
 
@@ -51,9 +51,6 @@ public class ImgSlicer : MonoBehaviour
         slicer.orthographicSize = maxSize + tarSize.z / 15.0f;
 
         sliceCount = 0;
-
-
-
     }
 
     private void Update()
