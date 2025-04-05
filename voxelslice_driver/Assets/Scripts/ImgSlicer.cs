@@ -70,18 +70,23 @@ public class ImgSlicer : MonoBehaviour
     {
         string filename = "slice" + sliceCount.ToString();
 
-        var tex = new Texture2D(rt.width, rt.height, TextureFormat.ARGB32, false);
-
         slicer.targetTexture = rt;
         slicer.Render();
         RenderTexture.active = rt;
 
+        var tex = new Texture2D(rt.width, rt.height, TextureFormat.ARGB32, false);
         tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
         tex.Apply();
 
         byte[] byteArray = tex.EncodeToPNG();
 
-        var path = "Assets/Textures/Rendered Textures/" + filename + ".png";
+        // Editor become read-only on runtime if running application
+        // var path = "Assets/Textures/Rendered Textures/" + filename + ".png";
+        // var path = "C:\\Users\\aaron\\OneDrive\\Pictures\\slices\\" + filename + ".png";
+        
+        // pi 4
+        var path = "/home/rpi4/Pictures/slices" + filename + ".png";
+
         File.WriteAllBytes(path, byteArray);
 
         DestroyImmediate(tex);
