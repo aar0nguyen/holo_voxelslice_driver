@@ -10,7 +10,6 @@ public class ImgSlicer : MonoBehaviour
     public Camera slicer;
     public GameObject Target;
     public GameObject TargetMesh;
-    public RenderTexture rt;
 
     public bool Turn;
     float NumberOfSlices = 100;
@@ -29,12 +28,14 @@ public class ImgSlicer : MonoBehaviour
     {
         Screen.SetResolution(640, 480, false);
 
+
         Target.transform.position = new Vector3(0, 0, 0);
 
         rend = TargetMesh.GetComponent<Renderer>();
-        bound = rend.bounds;
-        tarSize = bound.size;
-        tarCent = bound.center;
+        //bound = rend.bounds;
+        //tarSize = bound.size;
+        //tarCent = bound.center;
+
         transform.position = new Vector3(0, 2.75f, 0);
 
         slicer.enabled = true;
@@ -51,13 +52,11 @@ public class ImgSlicer : MonoBehaviour
         sliceCount = 0;
 
         StartCoroutine(SliceAndSave());
-
-
     }
 
     private IEnumerator SliceAndSave()
     {
-        while (sliceCount < NumberOfSlices)
+        while (true)
         {
             if (Turn)
             {
@@ -78,27 +77,34 @@ public class ImgSlicer : MonoBehaviour
 
     private void saveIMG(float sliceCount__)
     {
+
+        RenderTexture rt = new RenderTexture(64, 64, 16);
+        rt.filterMode = FilterMode.Bilinear;
+        rt.Create();
+
         slicer.targetTexture = rt;
-        slicer.Render();
+        tex = new Texture2D(rt.width, rt.height, TextureFormat.RGB24, false);
         RenderTexture.active = rt;
 
-        tex = new Texture2D(rt.width, rt.height, TextureFormat.RGB24, false);
+        slicer.Render();
+
         tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
         tex.Apply();
 
-        byte[] byteArray = ImageConversion.EncodeToJPG(tex, quality: 70); // quality 0–100
+
+        byte[] byteArray = tex.EncodeToPNG();
         
-        // Editor become read-only on runtime if running application
-        // var path = "Assets/Textures/Rendered Textures/" + filename + ".png";
-        string path = "C:\\Users\\aaron\\OneDrive\\Pictures\\slices\\slice" + sliceCount__.ToString() +".png";
+        // C:\\ path
+        // string path = "C:\\Users\\aaron\\OneDrive\\Pictures\\slices\\slice" + sliceCount__.ToString() +".png";
 
         // pi 4
-        // string path = $"/home/rpi4/Pictures/slices/slice" + sliceCount__.ToString() + ".png";
+        string path = $"/home/rpi4/Pictures/slices/slice" + sliceCount__.ToString() + ".png";
         File.WriteAllBytes(path, byteArray);
 
         slicer.targetTexture = null;
         RenderTexture.active = null;
-        DestroyImmediate(tex);
+        Destroy(tex);
+        Destroy(rt);
 
     }
 
