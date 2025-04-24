@@ -4,16 +4,26 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEditor;
 
 public class ImgSlicer : MonoBehaviour
 {
     public Camera slicer;
     public GameObject Target;
     public GameObject TargetMesh;
+    public Animator anime;
+    // public Animation animeee;
 
-    public bool Turn;
-    float NumberOfSlices = 100;
-    float sliceCount;
+    public bool turn;
+    public string anim;
+    float animSpeed = 0.0f;
+    float animStep = 0.1f;
+    float animProg = 0.0f;
+
+
+    float numSlices = 100;
+    float sliceCount = 0.0f;
+
 
     Renderer rend;
     Bounds bound;
@@ -28,13 +38,13 @@ public class ImgSlicer : MonoBehaviour
     {
         Screen.SetResolution(640, 480, false);
 
+        anime.Play("Snoozing", -1, 0.0f); // Jump to 10% of the animation
+        anime.speed = animSpeed;
+
 
         Target.transform.position = new Vector3(0, 0, 0);
 
         rend = TargetMesh.GetComponent<Renderer>();
-        //bound = rend.bounds;
-        //tarSize = bound.size;
-        //tarCent = bound.center;
 
         transform.position = new Vector3(0, 2.75f, 0);
 
@@ -43,33 +53,44 @@ public class ImgSlicer : MonoBehaviour
 
         slicer.nearClipPlane = 0;
 
-        // slicer.transform.position = new Vector3(tarCent.x, tarCent.y);
-        // maxSize = Mathf.Max(tarSize.x / 2.0f, tarSize.y / 2.0f);
-        // For 16x16
-        //slicer.orthographicSize = 0.7f;
-        // slicer.orthographicSize = maxSize + tarSize.z / 15.0f;
-
         sliceCount = 0;
 
-        StartCoroutine(SliceAndSave());
+        //StartCoroutine(SliceAndSave());
+    }
+
+    private void Update()
+    {
+     
+            if (Input.GetKeyDown(KeyCode.Space))
+            { // Press space to advance one frame
+                anime.Play("Snoozing", -1, animStep); // Jump to 10% of the animation
+                animStep += 0.1f;
+                Debug.Log(animStep);
+            }
+
     }
 
     private IEnumerator SliceAndSave()
     {
-        while (true)
+        while (turn)
         {
-            if (Turn)
+            float rotat = 360.0f / numSlices;
+            transform.Rotate(0, rotat, 0);
+
+
+            yield return new WaitForEndOfFrame();
+
+            // saveIMG(sliceCount);
+
+            sliceCount = (sliceCount + 1);
+
+            yield return new WaitForSeconds(0.05f);
+
+            if (sliceCount % 100 == 0 && sliceCount != 0)
             {
-                transform.Rotate(0, 360.0f / NumberOfSlices, 0);
+
             }
 
-            yield return new WaitForEndOfFrame(); // Let Unity finish rendering this frame
-
-            saveIMG(sliceCount);
-
-            sliceCount = (sliceCount + 1) % NumberOfSlices;
-
-            yield return new WaitForSeconds(0.05f); // Add a slight delay if needed to reduce CPU/GPU load
         }
 
     }
@@ -93,19 +114,29 @@ public class ImgSlicer : MonoBehaviour
 
 
         byte[] byteArray = tex.EncodeToPNG();
-        
-        // C:\\ path
-        // string path = "C:\\Users\\aaron\\OneDrive\\Pictures\\slices\\slice" + sliceCount__.ToString() +".png";
 
-        // pi 4
-        string path = $"/home/rpi4/Pictures/slices/slice" + sliceCount__.ToString() + ".png";
+        string sliceCountName = sliceCount__.ToString();
+        if (sliceCount__ <= 9)
+        {
+            sliceCountName = "0" + sliceCount__.ToString();
+        }
+
+        string path = "C:\\Users\\aaron\\OneDrive\\Pictures\\slice_snoozing\\snoozing" + sliceCountName +".png";
+
+
         File.WriteAllBytes(path, byteArray);
+
 
         slicer.targetTexture = null;
         RenderTexture.active = null;
         Destroy(tex);
         Destroy(rt);
 
+    }
+
+    public void AdvanceFrame()
+    {
+ 
     }
 
 }
