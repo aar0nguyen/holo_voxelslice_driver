@@ -254,9 +254,9 @@ MonoBehaviour:
   slicer: {fileID: 1348155985}
   Target: {fileID: 305042509}
   TargetMesh: {fileID: 305042509}
-  anime: {fileID: 0}
+  anime: {fileID: 305042511}
   turn: 1
-  anim: Snoozing
+  anim: Idle
 --- !u!4 &1018386195
 Transform:
   m_ObjectHideFlags: 0

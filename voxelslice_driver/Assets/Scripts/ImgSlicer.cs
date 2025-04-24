@@ -3,7 +3,6 @@ using UnityEngine.Rendering;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEditor;
 
 public class ImgSlicer : MonoBehaviour
@@ -12,13 +11,11 @@ public class ImgSlicer : MonoBehaviour
     public GameObject Target;
     public GameObject TargetMesh;
     public Animator anime;
-    // public Animation animeee;
 
     public bool turn;
     public string anim;
     float animSpeed = 0.0f;
     float animStep = 0.1f;
-    float animProg = 0.0f;
 
 
     float numSlices = 100;
@@ -38,7 +35,7 @@ public class ImgSlicer : MonoBehaviour
     {
         Screen.SetResolution(640, 480, false);
 
-        anime.Play("Snoozing", -1, 0.0f); // Jump to 10% of the animation
+        anime.Play(anim, -1, 0.0f); 
         anime.speed = animSpeed;
 
 
@@ -55,19 +52,7 @@ public class ImgSlicer : MonoBehaviour
 
         sliceCount = 0;
 
-        //StartCoroutine(SliceAndSave());
-    }
-
-    private void Update()
-    {
-     
-            if (Input.GetKeyDown(KeyCode.Space))
-            { // Press space to advance one frame
-                anime.Play("Snoozing", -1, animStep); // Jump to 10% of the animation
-                animStep += 0.1f;
-                Debug.Log(animStep);
-            }
-
+       StartCoroutine(SliceAndSave());
     }
 
     private IEnumerator SliceAndSave()
@@ -80,7 +65,7 @@ public class ImgSlicer : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
 
-            // saveIMG(sliceCount);
+            saveIMG(sliceCount);
 
             sliceCount = (sliceCount + 1);
 
@@ -88,7 +73,11 @@ public class ImgSlicer : MonoBehaviour
 
             if (sliceCount % 100 == 0 && sliceCount != 0)
             {
-
+                anime.Play(anim, -1, animStep); 
+                animStep += 0.1f;
+                // Debug.Log(animStep);
+                if (animStep >= 1.1) EditorApplication.isPlaying = false;
+                if (anim == "Idle") EditorApplication.isPlaying = false;
             }
 
         }
@@ -121,8 +110,14 @@ public class ImgSlicer : MonoBehaviour
             sliceCountName = "0" + sliceCount__.ToString();
         }
 
-        string path = "C:\\Users\\aaron\\OneDrive\\Pictures\\slice_snoozing\\snoozing" + sliceCountName +".png";
+        string folder = "slice_" + anim;
 
+        string subpath = "C:\\pictures_temp\\" + folder + "\\";
+        string path = subpath + anim + sliceCountName +".png";
+
+        bool exists = System.IO.Directory.Exists(subpath);
+
+        if (!exists) System.IO.Directory.CreateDirectory(subpath);
 
         File.WriteAllBytes(path, byteArray);
 
