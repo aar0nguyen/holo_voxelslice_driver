@@ -256,7 +256,7 @@ MonoBehaviour:
   TargetMesh: {fileID: 305042509}
   anime: {fileID: 305042511}
   turn: 1
-  anim: Idle
+  anim: Processing
 --- !u!4 &1018386195
 Transform:
   m_ObjectHideFlags: 0

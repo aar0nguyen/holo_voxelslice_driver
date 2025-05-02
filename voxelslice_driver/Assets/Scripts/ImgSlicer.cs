@@ -30,9 +30,12 @@ public class ImgSlicer : MonoBehaviour
 
     Texture2D tex;
 
+    System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
 
     private void Start()
     {
+
         Screen.SetResolution(640, 480, false);
 
         anime.Play(anim, -1, 0.0f); 
@@ -52,16 +55,18 @@ public class ImgSlicer : MonoBehaviour
 
         sliceCount = 0;
 
-       StartCoroutine(SliceAndSave());
+        StartCoroutine(SliceAndSave());
     }
 
     private IEnumerator SliceAndSave()
     {
+        stopwatch.Start();
+
         while (turn)
         {
+
             float rotat = 360.0f / numSlices;
             transform.Rotate(0, rotat, 0);
-
 
             yield return new WaitForEndOfFrame();
 
@@ -76,14 +81,20 @@ public class ImgSlicer : MonoBehaviour
                 anime.Play(anim, -1, animStep); 
                 animStep += 0.1f;
                 // Debug.Log(animStep);
-                if (animStep >= 1.1) EditorApplication.isPlaying = false;
-                if (anim == "Idle") EditorApplication.isPlaying = false;
+                if (anim == "Idle" || animStep >= 1.1)
+                {
+                    Debug.Log("Render 100 img taken: " + (stopwatch.Elapsed));
+                    stopwatch.Reset();
+                    EditorApplication.isPlaying = false;
+                }
             }
+
+            //Debug.Log("Render 1 img taken: " + (stopwatch.Elapsed));
+            //stopwatch.Reset();
 
         }
 
     }
-
 
     private void saveIMG(float sliceCount__)
     {
@@ -100,7 +111,6 @@ public class ImgSlicer : MonoBehaviour
 
         tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
         tex.Apply();
-
 
         byte[] byteArray = tex.EncodeToPNG();
 
@@ -126,12 +136,5 @@ public class ImgSlicer : MonoBehaviour
         RenderTexture.active = null;
         Destroy(tex);
         Destroy(rt);
-
     }
-
-    public void AdvanceFrame()
-    {
- 
-    }
-
 }
