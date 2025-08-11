@@ -18,7 +18,7 @@ public class ImgSlicer : MonoBehaviour
     float animStep = 0.1f;
 
 
-    float numSlices = 100;
+    float numSlices = 1000;
     float sliceCount = 0.0f;
 
 
@@ -76,14 +76,14 @@ public class ImgSlicer : MonoBehaviour
 
             yield return new WaitForSeconds(0.05f);
 
-            if (sliceCount % 100 == 0 && sliceCount != 0)
+            if (sliceCount % 1000 == 0 && sliceCount != 0)
             {
                 anime.Play(anim, -1, animStep); 
                 animStep += 0.1f;
                 // Debug.Log(animStep);
                 if (anim == "Idle" || animStep >= 1.1)
                 {
-                    Debug.Log("Render 100 img taken: " + (stopwatch.Elapsed));
+                    Debug.Log("Rendering img taken: " + (stopwatch.Elapsed));
                     stopwatch.Reset();
                     EditorApplication.isPlaying = false;
                 }
@@ -116,6 +116,14 @@ public class ImgSlicer : MonoBehaviour
 
         string sliceCountName = sliceCount__.ToString();
         if (sliceCount__ <= 9)
+        {
+            sliceCountName = "000" + sliceCount__.ToString();
+        }
+        else if (sliceCount__ <= 99)
+        {
+            sliceCountName = "00" + sliceCount__.ToString();
+        }
+        else if (sliceCount__ <= 999)
         {
             sliceCountName = "0" + sliceCount__.ToString();
         }
